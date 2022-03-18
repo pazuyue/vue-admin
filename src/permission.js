@@ -32,7 +32,7 @@ router.beforeEach(async(to, from, next) => {
         next()
       } else {
         try {
-          console.log("获取用户权限")
+          console.log('获取用户权限')
           // get user info
           // note: roles must be a object array! such as: ['admin'] or ,['developer','editor']
           const { roles } = await store.dispatch('user/getInfo')
@@ -57,7 +57,7 @@ router.beforeEach(async(to, from, next) => {
     }
   } else {
     /* has no token*/
-  console.log("has no token")
+    console.log('has no token')
     if (whiteList.indexOf(to.path) !== -1) {
       // in the free login whitelist, go directly
       next()

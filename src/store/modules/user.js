@@ -35,6 +35,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password, appkey: process.env.VUE_APP_APPKEY, appsecret: process.env.VUE_APP_SECRET }).then(response => {
         const { data } = response
+        actions.username = username.trim()
         commit('SET_TOKEN', data.token)
         setToken(data.token)
         resolve()
@@ -48,7 +49,7 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      getInfo(state.token, actions.username).then(response => {
         const { data } = response
 
         if (!data) {
