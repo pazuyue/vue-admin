@@ -33,14 +33,13 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
-
+      login({ username: username.trim(), password: password, appkey: process.env.VUE_APP_APPKEY, appsecret: process.env.VUE_APP_SECRET }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
         setToken(data.token)
         resolve()
       }).catch(error => {
-          console.log(error)
+        console.log(error)
         reject(error)
       })
     })
