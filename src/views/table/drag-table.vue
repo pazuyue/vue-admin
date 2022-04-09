@@ -10,7 +10,7 @@
 
       <el-table-column width="180px" align="center" label="Date">
         <template slot-scope="{row}">
-          <span>{{ row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ row.modified_by | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
 
@@ -22,7 +22,7 @@
 
       <el-table-column width="110px" align="center" label="Author">
         <template slot-scope="{row}">
-          <span>{{ row.author }}</span>
+          <span>{{ row.created_by }}</span>
         </template>
       </el-table-column>
 
@@ -40,8 +40,8 @@
 
       <el-table-column class-name="status-col" label="Status" width="110">
         <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">
-            {{ row.status }}
+          <el-tag :type="row.state | statusFilter">
+            {{ row.state }}
           </el-tag>
         </template>
       </el-table-column>
@@ -99,8 +99,8 @@ export default {
     async getList() {
       this.listLoading = true
       const { data } = await fetchList(this.listQuery)
-      this.list = data.items
-      this.total = data.total
+      this.list = data.list
+      this.total = data.pager.total_rows
       this.listLoading = false
       this.oldList = this.list.map(v => v.id)
       this.newList = this.oldList.slice()

@@ -9,8 +9,10 @@ import Layout from '@/layout'
 /* Router Modules */
 import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
-import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
+import messageRouter from './modules/message'
+import SginInRouter from './modules/sign-in'
+
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -83,18 +85,7 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/documentation',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'Documentation',
-        meta: { title: 'documentation', icon: 'documentation', affix: true }
-      }
-    ]
-  },
+
   {
     path: '/guide',
     component: Layout,
@@ -171,7 +162,7 @@ export const asyncRoutes = [
     ]
   },
 
-  {
+ /* {
     path: '/icon',
     component: Layout,
     children: [
@@ -182,13 +173,14 @@ export const asyncRoutes = [
         meta: { title: 'icons', icon: 'icon', noCache: true }
       }
     ]
-  },
+  }, */
 
   /** when your routing map is too long, you can split it into small modules **/
-  componentsRouter,
+/*  componentsRouter,
   chartsRouter,
-  nestedRouter,
-  tableRouter,
+  nestedRouter, */
+  messageRouter,
+  SginInRouter,
 
   {
     path: '/example',
@@ -222,7 +214,7 @@ export const asyncRoutes = [
     ]
   },
 
-  {
+/*  {
     path: '/tab',
     component: Layout,
     children: [
@@ -233,9 +225,9 @@ export const asyncRoutes = [
         meta: { title: 'tab', icon: 'tab' }
       }
     ]
-  },
+  }, */
 
-  {
+/*  {
     path: '/error',
     component: Layout,
     redirect: 'noRedirect',
@@ -258,9 +250,9 @@ export const asyncRoutes = [
         meta: { title: 'page404', noCache: true }
       }
     ]
-  },
+  }, */
 
-  {
+ /* {
     path: '/error-log',
     component: Layout,
     children: [
@@ -271,9 +263,9 @@ export const asyncRoutes = [
         meta: { title: 'errorLog', icon: 'bug' }
       }
     ]
-  },
+  }, */
 
-  {
+ /* {
     path: '/excel',
     component: Layout,
     redirect: '/excel/export-excel',
@@ -309,8 +301,8 @@ export const asyncRoutes = [
       }
     ]
   },
-
-  {
+ */
+ /* {
     path: '/zip',
     component: Layout,
     redirect: '/zip/download',
@@ -325,9 +317,9 @@ export const asyncRoutes = [
         meta: { title: 'exportZip' }
       }
     ]
-  },
+  }, */
 
-  {
+  /* {
     path: '/pdf',
     component: Layout,
     redirect: '/pdf/index',
@@ -339,8 +331,8 @@ export const asyncRoutes = [
         meta: { title: 'pdf', icon: 'pdf' }
       }
     ]
-  },
-  {
+  }, */
+  /* {
     path: '/pdf/download',
     component: () => import('@/views/pdf/download'),
     hidden: true
@@ -357,9 +349,9 @@ export const asyncRoutes = [
         meta: { title: 'theme', icon: 'theme' }
       }
     ]
-  },
+  }, */
 
-  {
+ /* {
     path: '/clipboard',
     component: Layout,
     children: [
@@ -370,9 +362,9 @@ export const asyncRoutes = [
         meta: { title: 'clipboardDemo', icon: 'clipboard' }
       }
     ]
-  },
+  }, */
 
-  {
+ /* {
     path: '/i18n',
     component: Layout,
     children: [
@@ -383,9 +375,9 @@ export const asyncRoutes = [
         meta: { title: 'i18n', icon: 'international' }
       }
     ]
-  },
+  }, */
 
-  {
+/*  {
     path: 'external-link',
     component: Layout,
     children: [
@@ -394,7 +386,7 @@ export const asyncRoutes = [
         meta: { title: 'externalLink', icon: 'link' }
       }
     ]
-  },
+  }, */
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

@@ -12,7 +12,7 @@ const tableRouter = {
     icon: 'table'
   },
   children: [
-    {
+    /* {
       path: 'dynamic-table',
       component: () => import('@/views/table/dynamic-table/index'),
       name: 'DynamicTable',
@@ -35,6 +35,12 @@ const tableRouter = {
       component: () => import('@/views/table/complex-table'),
       name: 'ComplexTable',
       meta: { title: 'complexTable' }
+    }, */
+    {
+      path: 'message-table',
+      component: () => import('@/views/table/message-table'),
+      name: 'MessageTable',
+      meta: { title: 'messageTable' }
     }
   ]
 }
