@@ -7,13 +7,8 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
-import componentsRouter from './modules/components'
-import chartsRouter from './modules/charts'
-import nestedRouter from './modules/nested'
 import messageRouter from './modules/message'
 import SginInRouter from './modules/sign-in'
-
-
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -162,23 +157,6 @@ export const asyncRoutes = [
     ]
   },
 
- /* {
-    path: '/icon',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/icons/index'),
-        name: 'Icons',
-        meta: { title: 'icons', icon: 'icon', noCache: true }
-      }
-    ]
-  }, */
-
-  /** when your routing map is too long, you can split it into small modules **/
-/*  componentsRouter,
-  chartsRouter,
-  nestedRouter, */
   messageRouter,
   SginInRouter,
 
@@ -214,7 +192,7 @@ export const asyncRoutes = [
     ]
   },
 
-/*  {
+  /*  {
     path: '/tab',
     component: Layout,
     children: [
@@ -227,7 +205,7 @@ export const asyncRoutes = [
     ]
   }, */
 
-/*  {
+  /*  {
     path: '/error',
     component: Layout,
     redirect: 'noRedirect',
@@ -252,7 +230,7 @@ export const asyncRoutes = [
     ]
   }, */
 
- /* {
+  /* {
     path: '/error-log',
     component: Layout,
     children: [
@@ -265,7 +243,7 @@ export const asyncRoutes = [
     ]
   }, */
 
- /* {
+  /* {
     path: '/excel',
     component: Layout,
     redirect: '/excel/export-excel',
@@ -302,7 +280,7 @@ export const asyncRoutes = [
     ]
   },
  */
- /* {
+  /* {
     path: '/zip',
     component: Layout,
     redirect: '/zip/download',
@@ -351,7 +329,7 @@ export const asyncRoutes = [
     ]
   }, */
 
- /* {
+  /* {
     path: '/clipboard',
     component: Layout,
     children: [
@@ -364,7 +342,7 @@ export const asyncRoutes = [
     ]
   }, */
 
- /* {
+  /* {
     path: '/i18n',
     component: Layout,
     children: [
@@ -377,7 +355,7 @@ export const asyncRoutes = [
     ]
   }, */
 
-/*  {
+  /*  {
     path: 'external-link',
     component: Layout,
     children: [
