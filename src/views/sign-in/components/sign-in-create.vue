@@ -2,17 +2,18 @@
   <div class="createPost-container">
     <el-row>
       <el-col :span="24">
-        <el-form ref="form" :model="form" label-width="80px" class="form-container">
+        <el-form ref="signFrom" :model="signFrom" :rules="signRules" label-width="80px" class="form-container" autocomplete="on" label-position="left">
           <el-form-item label="值班人员">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="signFrom.created_by"></el-input>
+            <el-input v-model="signFrom.token" v-show="false"></el-input>
           </el-form-item>
           <el-form-item label="值班时间">
             <el-col :span="11">
-              <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
+              <el-date-picker type="date" placeholder="选择日期" v-model="signFrom.sign_time" style="width: 100%;"></el-date-picker>
             </el-col>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">立即创建</el-button>
+            <el-button :loading="loading" type="primary" @click="onSubmit">立即创建</el-button>
             <el-button>取消</el-button>
           </el-form-item>
         </el-form>
@@ -23,26 +24,62 @@
 </template>
 
 <script>
+import { getToken } from '@/utils/auth'
+
 export default {
+  name: 'Sign',
   data() {
-    return {
-      form: {
-        name: '',
-        region: '',
-        date1: ''
+    const validateSignTime = (rule, value, callback) => {
+      if (value == null) {
+        callback(new Error('Please enter the correct user name'))
+      } else {
+        callback()
       }
+    }
+    return {
+      signFrom: {
+        created_by: '',
+        token: getToken(),
+        sign_time: '',
+        loading: false
+      },
+      signRules: {
+        sign_time: [{ required: true, trigger: 'blur', validator: validateSignTime }]
+      }
+    }
+  },
+  mounted() {
+    if (this.signFrom.created_by === '') {
+      this.$refs.created_by.focus()
+    } else if (this.signFrom.sign_time === '') {
+      this.$refs.sign_time.focus()
     }
   },
   methods: {
     onSubmit() {
-      console.log('submit!')
+      this.$refs.signFrom.validate(valid => {
+        if (valid) {
+          this.loading = true
+          this.$store.dispatch('sign', this.signFrom)
+            .then(() => {
+              console.log('success')
+              this.loading = false
+            })
+            .catch(() => {
+              console.log('fail')
+              this.loading = false
+            })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import "~@/styles/mixin.scss";
 
 .createPost-container {
   position: relative;
