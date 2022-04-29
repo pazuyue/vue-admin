@@ -1,4 +1,3 @@
-import { sign } from '@/api/sign'
 
 const state = {
   logs: []
@@ -11,7 +10,7 @@ const mutations = {
 }
 
 const actions = {
-  sign({ commit }, signFrom) {
+  sign(signFrom) {
     console.log(signFrom)
   }
 }
