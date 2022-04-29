@@ -12,16 +12,7 @@ const mutations = {
 
 const actions = {
   sign({ commit }, signFrom) {
-    const { created_by, token, sign_time } = signFrom
-    return new Promise((resolve, reject) => {
-      sign({ created_by: created_by.trim(), token: token, sign_time: sign_time }).then(response => {
-        console.log(response)
-        return response
-      }).catch(error => {
-        console.log(error)
-        reject(error)
-      })
-    })
+    console.log(signFrom)
   }
 }
 

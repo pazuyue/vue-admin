@@ -7,7 +7,6 @@ Vue.use(Router)
 import Layout from '@/layout'
 
 /* Router Modules */
-import messageRouter from './modules/message'
 import SginInRouter from './modules/sign-in'
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -157,7 +156,6 @@ export const asyncRoutes = [
     ]
   },
 
-  messageRouter,
   SginInRouter,
 
   {

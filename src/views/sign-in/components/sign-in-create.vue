@@ -3,18 +3,32 @@
     <el-row>
       <el-col :span="24">
         <el-form ref="signFrom" :model="signFrom" :rules="signRules" label-width="80px" class="form-container" autocomplete="on" label-position="left">
-          <el-form-item label="值班人员">
-            <el-input v-model="signFrom.created_by"></el-input>
-            <el-input v-model="signFrom.token" v-show="false"></el-input>
+          <el-form-item label="值班人员" prop="created_by">
+            <el-input
+              ref="created_by"
+              v-model="signFrom.created_by"
+              name="created_by"
+              type="text"
+              tabindex="1"
+              autocomplete="on"
+            />
+            <el-input
+              ref="token"
+              v-model="signFrom.token"
+              name="token"
+              type="text"
+              tabindex="1"
+              autocomplete="on"
+              v-show="false"
+            />
           </el-form-item>
-          <el-form-item label="值班时间">
+          <el-form-item label="值班时间" prop="sign_time">
             <el-col :span="11">
-              <el-date-picker type="date" placeholder="选择日期" v-model="signFrom.sign_time" style="width: 100%;"></el-date-picker>
+              <el-date-picker type="date" placeholder="选择日期"  ref="sign_time" v-model="signFrom.sign_time" style="width: 100%;"></el-date-picker>
             </el-col>
           </el-form-item>
           <el-form-item>
-            <el-button :loading="loading" type="primary" @click="onSubmit">立即创建</el-button>
-            <el-button>取消</el-button>
+            <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="onSubmit">立即创建</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -27,10 +41,20 @@
 import { getToken } from '@/utils/auth'
 
 export default {
-  name: 'Sign',
+  name: 'SignInCreate',
   data() {
     const validateSignTime = (rule, value, callback) => {
+      console.log('validateSignTime')
       if (value == null) {
+        callback(new Error('Please enter the correct user name'))
+      } else {
+        callback()
+      }
+    }
+
+    const validateCreatedBy = (rule, value, callback) => {
+      console.log('validateCreatedBy')
+      if (value.length <= 0) {
         callback(new Error('Please enter the correct user name'))
       } else {
         callback()
@@ -40,10 +64,12 @@ export default {
       signFrom: {
         created_by: '',
         token: getToken(),
-        sign_time: '',
-        loading: false
+        sign_time: ''
       },
+      loading: false,
       signRules: {
+
+        created_by: [{ required: true, trigger: 'blur', validator: validateCreatedBy }],
         sign_time: [{ required: true, trigger: 'blur', validator: validateSignTime }]
       }
     }
@@ -58,21 +84,9 @@ export default {
   methods: {
     onSubmit() {
       this.$refs.signFrom.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('sign', this.signFrom)
-            .then(() => {
-              console.log('success')
-              this.loading = false
-            })
-            .catch(() => {
-              console.log('fail')
-              this.loading = false
-            })
-        } else {
-          console.log('error submit!!')
-          return false
-        }
+        console.log('error submit!!')
+        console.log(valid)
+        return 'ok'
       })
     }
   }
