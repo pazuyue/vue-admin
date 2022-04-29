@@ -10,7 +10,7 @@ const mutations = {
 }
 
 const actions = {
-  sign(signFrom) {
+  sign({ commit }, signFrom) {
     console.log(signFrom)
   }
 }

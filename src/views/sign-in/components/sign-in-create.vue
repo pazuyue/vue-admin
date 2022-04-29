@@ -45,8 +45,9 @@ export default {
   data() {
     const validateSignTime = (rule, value, callback) => {
       console.log('validateSignTime')
-      if (value == null) {
-        callback(new Error('Please enter the correct user name'))
+      console.log(value)
+      if (value == null || value === '') {
+        callback(new Error('Please enter the correct SignTime'))
       } else {
         callback()
       }
@@ -84,9 +85,21 @@ export default {
   methods: {
     onSubmit() {
       this.$refs.signFrom.validate(valid => {
-        console.log('error submit!!')
-        console.log(valid)
-        return 'ok'
+        if (valid) {
+          this.loading = true
+          this.$store.dispatch('sign/sign', this.signFrom)
+            .then(() => {
+              console.log('sign-1')
+              this.loading = false
+            })
+            .catch(() => {
+              console.log('sign-2')
+              this.loading = false
+            })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
       })
     }
   }
