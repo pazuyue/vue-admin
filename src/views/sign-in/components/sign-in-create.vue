@@ -13,9 +13,9 @@
               autocomplete="on"
             />
             <el-input
-              ref="token"
-              v-model="signFrom.token"
-              name="token"
+              ref="user_id"
+              v-model="signFrom.user_id"
+              name="user_id"
               type="text"
               tabindex="1"
               autocomplete="on"
@@ -24,7 +24,7 @@
           </el-form-item>
           <el-form-item label="值班时间" prop="sign_time">
             <el-col :span="11">
-              <el-date-picker type="date" placeholder="选择日期"  ref="sign_time" v-model="signFrom.sign_time" style="width: 100%;"></el-date-picker>
+              <el-date-picker type="date" placeholder="选择日期"  ref="sign_time" v-model="signFrom.sign_time" value-format="yyyy-MM-dd HH:mm:ss" style="width: 100%;"></el-date-picker>
             </el-col>
           </el-form-item>
           <el-form-item>
@@ -34,7 +34,6 @@
       </el-col>
     </el-row>
   </div>
-
 </template>
 
 <script>
@@ -65,7 +64,8 @@ export default {
       signFrom: {
         created_by: '',
         token: getToken(),
-        sign_time: ''
+        sign_time: '',
+        user_id: 1
       },
       loading: false,
       signRules: {
@@ -89,7 +89,10 @@ export default {
           this.loading = true
           this.$store.dispatch('sign/sign', this.signFrom)
             .then(() => {
-              console.log('sign-1')
+              this.$message({
+                message: '恭喜你，信息保存成功',
+                type: 'success'
+              })
               this.loading = false
             })
             .catch(() => {
