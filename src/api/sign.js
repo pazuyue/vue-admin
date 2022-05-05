@@ -7,3 +7,11 @@ export function sign(data) {
     data
   })
 }
+
+export function signList(data) {
+  return request({
+    url: '/signList',
+    method: 'post',
+    data
+  })
+}

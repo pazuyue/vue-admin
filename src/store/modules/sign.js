@@ -1,5 +1,4 @@
-import { login } from '@/api/user'
-import { sign } from '@/api/sign'
+import { sign, signList } from '@/api/sign'
 
 const state = {
   logs: []
@@ -13,7 +12,7 @@ const mutations = {
 
 const actions = {
   sign({ commit }, signFrom) {
-    console.log('sign-modules')
+    console.log('sign/sign')
     new Promise(function(resolve, reject) {
       var signtime = Math.round(new Date(signFrom.sign_time).getTime() / 1000)
       sign({ created_by: signFrom.created_by, user_id: signFrom.user_id, sign_time: signtime }).then(response => {
@@ -24,6 +23,27 @@ const actions = {
         reject(error)
       })
     })
+  },
+  signList({ commit }, data) {
+    console.log('sign/signList')
+    console.log(data)
+    var list = new Promise(function(resolve, reject) {
+      signList(data).then(response => {
+        const { data } = response
+        data.list.forEach((v, i) => {
+          if (v.state === 1) {
+            v.state = '有效'
+          } else {
+            v.state = '已使用'
+          }
+          v.sign_time = v.sign_time * 1000
+        })
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+    return list
   }
 }
 

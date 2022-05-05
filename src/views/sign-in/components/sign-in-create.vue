@@ -3,21 +3,27 @@
     <el-row>
       <el-col :span="24">
         <el-table
+          v-loading="loading"
           :data="tableData"
-          style="width: 100%">
+          style="width: 100%"
+        >
           <el-table-column
-            prop="date"
+            prop="sign_time"
             label="日期"
-            width="180">
+            width="180"
+            :formatter="dateFormat"
+          >
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="created_by"
             label="姓名"
-            width="180">
+            width="180"
+          >
           </el-table-column>
           <el-table-column
-            prop="address"
-            label="地址">
+            prop="state"
+            label="状态"
+          >
           </el-table-column>
         </el-table>
       </el-col>
@@ -26,7 +32,9 @@
     <el-row>
       <el-col :span="24">
         <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
-        <el-form ref="signFrom" :model="signFrom" :rules="signRules" label-width="80px" class="form-container" autocomplete="on" label-position="left">
+        <el-form ref="signFrom" :model="signFrom" :rules="signRules" label-width="80px" class="form-container"
+                 autocomplete="on" label-position="left"
+        >
           <el-form-item label="值班人员" prop="created_by">
             <el-input
               ref="created_by"
@@ -48,11 +56,16 @@
           </el-form-item>
           <el-form-item label="值班时间" prop="sign_time">
             <el-col :span="11">
-              <el-date-picker type="date" placeholder="选择日期"  ref="sign_time" v-model="signFrom.sign_time" value-format="yyyy-MM-dd HH:mm:ss" ></el-date-picker>
+              <el-date-picker type="date" placeholder="选择日期" ref="sign_time" v-model="signFrom.sign_time"
+                              value-format="yyyy-MM-dd HH:mm:ss"
+              ></el-date-picker>
             </el-col>
           </el-form-item>
           <el-form-item>
-            <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="onSubmit">立即创建</el-button>
+            <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
+                       @click.native.prevent="onSubmit"
+            >立即创建
+            </el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -62,6 +75,7 @@
 
 <script>
 import { getToken } from '@/utils/auth'
+import moment from 'moment'
 
 export default {
   name: 'SignInCreate',
@@ -97,25 +111,14 @@ export default {
         sign_time: [{ required: true, trigger: 'blur', validator: validateSignTime }]
       },
       tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
+        sign_time: '2016-05-02',
+        created_by: '',
+        state: ''
       }]
     }
   },
   mounted() {
+    this.getSignList()
     if (this.signFrom.created_by === '') {
       this.$refs.created_by.focus()
     } else if (this.signFrom.sign_time === '') {
@@ -145,6 +148,25 @@ export default {
           return false
         }
       })
+    },
+    getSignList() {
+      this.loading = true
+      this.$store.dispatch('sign/signList').then((response) => {
+        console.log('dispatch-signList')
+        console.log(response)
+        this.tableData = response.list
+        this.loading = false
+      })
+        .catch(() => {
+          this.loading = false
+        })
+    },
+    dateFormat: function(row, column) {
+      var date = row[column.property]
+      if (date === undefined) {
+        return ''
+      }
+      return moment(date).format('YYYY-MM-DD HH:mm:ss')
     }
   }
 }
