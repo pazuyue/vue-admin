@@ -12,7 +12,7 @@ export function getInfo(username) {
   return request({
     url: '/user/info',
     method: 'post',
-    data: { 'username': username }
+    data: { 'token': username }
   })
 }
 

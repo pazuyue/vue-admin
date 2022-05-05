@@ -2,6 +2,30 @@
   <div class="createPost-container">
     <el-row>
       <el-col :span="24">
+        <el-table
+          :data="tableData"
+          style="width: 100%">
+          <el-table-column
+            prop="date"
+            label="日期"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="name"
+            label="姓名"
+            width="180">
+          </el-table-column>
+          <el-table-column
+            prop="address"
+            label="地址">
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
+
+    <el-row>
+      <el-col :span="24">
+        <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
         <el-form ref="signFrom" :model="signFrom" :rules="signRules" label-width="80px" class="form-container" autocomplete="on" label-position="left">
           <el-form-item label="值班人员" prop="created_by">
             <el-input
@@ -24,7 +48,7 @@
           </el-form-item>
           <el-form-item label="值班时间" prop="sign_time">
             <el-col :span="11">
-              <el-date-picker type="date" placeholder="选择日期"  ref="sign_time" v-model="signFrom.sign_time" value-format="yyyy-MM-dd HH:mm:ss" style="width: 100%;"></el-date-picker>
+              <el-date-picker type="date" placeholder="选择日期"  ref="sign_time" v-model="signFrom.sign_time" value-format="yyyy-MM-dd HH:mm:ss" ></el-date-picker>
             </el-col>
           </el-form-item>
           <el-form-item>
@@ -62,17 +86,33 @@ export default {
     }
     return {
       signFrom: {
-        created_by: '',
+        created_by: this.$store.getters.name,
         token: getToken(),
         sign_time: '',
-        user_id: 1
+        user_id: this.$store.getters.user_id
       },
       loading: false,
       signRules: {
-
         created_by: [{ required: true, trigger: 'blur', validator: validateCreatedBy }],
         sign_time: [{ required: true, trigger: 'blur', validator: validateSignTime }]
-      }
+      },
+      tableData: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1517 弄'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1516 弄'
+      }]
     }
   },
   mounted() {
@@ -86,6 +126,8 @@ export default {
     onSubmit() {
       this.$refs.signFrom.validate(valid => {
         if (valid) {
+          console.log('sign-1')
+          console.log(this.$store.getters)
           this.loading = true
           this.$store.dispatch('sign/sign', this.signFrom)
             .then(() => {
@@ -96,7 +138,6 @@ export default {
               this.loading = false
             })
             .catch(() => {
-              console.log('sign-2')
               this.loading = false
             })
         } else {
