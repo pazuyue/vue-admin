@@ -15,7 +15,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="created_by"
+            prop="username"
             label="姓名"
             width="180"
           >
@@ -32,39 +32,27 @@
     <el-row>
       <el-col :span="24">
         <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
-        <el-form ref="signFrom" :model="signFrom" :rules="signRules" label-width="80px" class="form-container"
-                 autocomplete="on" label-position="left"
-        >
-          <el-form-item label="值班人员" prop="created_by">
-            <el-input
-              ref="created_by"
-              v-model="signFrom.created_by"
-              name="created_by"
-              type="text"
-              tabindex="1"
-              autocomplete="on"
-            />
-            <el-input
-              ref="user_id"
-              v-model="signFrom.user_id"
-              name="user_id"
-              type="text"
-              tabindex="1"
-              autocomplete="on"
-              v-show="false"
-            />
+        <el-form ref="signFrom" :model="signFrom" :rules="signRules" label-width="80px" class="form-container" autocomplete="on" label-position="left">
+          <el-form-item label="值班人员" prop="user_id">
+            <el-select v-model="signFrom.user_id" placeholder="请选择用户">
+              <el-option
+                ref="user_id"
+                v-for="item in users"
+                :key="item.user_id"
+                :label="item.username"
+                :value="item.user_id"
+              >
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="值班时间" prop="sign_time">
             <el-col :span="11">
-              <el-date-picker type="date" placeholder="选择日期" ref="sign_time" v-model="signFrom.sign_time"
-                              value-format="yyyy-MM-dd HH:mm:ss"
-              ></el-date-picker>
+              <el-date-picker type="date" placeholder="选择日期" ref="sign_time" v-model="signFrom.sign_time" value-format="yyyy-MM-dd HH:mm:ss"/>
             </el-col>
           </el-form-item>
           <el-form-item>
-            <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
-                       @click.native.prevent="onSubmit"
-            >立即创建
+            <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="onSubmit">
+              立即创建
             </el-button>
           </el-form-item>
         </el-form>
@@ -90,48 +78,37 @@ export default {
       }
     }
 
-    const validateCreatedBy = (rule, value, callback) => {
-      console.log('validateCreatedBy')
-      if (value.length <= 0) {
-        callback(new Error('Please enter the correct user name'))
-      } else {
-        callback()
-      }
-    }
     return {
+      users: [],
       signFrom: {
         created_by: this.$store.getters.name,
         token: getToken(),
         sign_time: '',
-        user_id: this.$store.getters.user_id
+        user_id: ''
       },
       loading: false,
       signRules: {
-        created_by: [{ required: true, trigger: 'blur', validator: validateCreatedBy }],
+        user_id: [{ required: true, message: '请选择用户', trigger: 'change' }],
         sign_time: [{ required: true, trigger: 'blur', validator: validateSignTime }]
       },
       tableData: [{
-        sign_time: '2016-05-02',
-        created_by: '',
+        sign_time: '',
+        username: '',
         state: ''
       }]
     }
   },
   mounted() {
     this.getSignList()
-    if (this.signFrom.created_by === '') {
-      this.$refs.created_by.focus()
-    } else if (this.signFrom.sign_time === '') {
-      this.$refs.sign_time.focus()
-    }
+    this.userList()
   },
   methods: {
     onSubmit() {
       this.$refs.signFrom.validate(valid => {
         if (valid) {
           console.log('sign-1')
-          console.log(this.$store.getters)
           this.loading = true
+          console.log(this.signFrom)
           this.$store.dispatch('sign/sign', this.signFrom)
             .then(() => {
               this.$message({
@@ -156,10 +133,16 @@ export default {
         console.log(response)
         this.tableData = response.list
         this.loading = false
+      }).catch(() => {
+        this.loading = false
       })
-        .catch(() => {
-          this.loading = false
-        })
+    },
+    userList() {
+      this.$store.dispatch('user/userList').then((response) => {
+        console.log('dispatch-userList')
+        console.log(response)
+        this.users = response
+      })
     },
     dateFormat: function(row, column) {
       var date = row[column.property]

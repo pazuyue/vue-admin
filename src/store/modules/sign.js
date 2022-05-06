@@ -37,6 +37,7 @@ const actions = {
             v.state = '已使用'
           }
           v.sign_time = v.sign_time * 1000
+          v.username = v.systemUser.username
         })
         resolve(data)
       }).catch(error => {

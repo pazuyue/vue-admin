@@ -1,6 +1,7 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo, userList } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
+import { signList } from '@/api/sign'
 
 const state = {
   token: getToken(),
@@ -97,6 +98,27 @@ const actions = {
         reject(error)
       })
     })
+  },
+
+  userList({ commit }, data) {
+    console.log('user/userList')
+    console.log(data)
+    var list = new Promise(function(resolve, reject) {
+      userList(data).then(response => {
+        const { data } = response
+        var list_user = []
+        data.list.forEach((v, i) => {
+          var activeSubjectsObject = {}
+          activeSubjectsObject.user_id = v.id
+          activeSubjectsObject.username = v.username
+          list_user.push(activeSubjectsObject)
+        })
+        resolve(list_user)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+    return list
   },
 
   // remove token

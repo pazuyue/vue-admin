@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function sign(data) {
   return request({
-    url: '/signIn',
+    url: '/sign/signIn',
     method: 'post',
     data
   })
@@ -10,7 +10,7 @@ export function sign(data) {
 
 export function signList(data) {
   return request({
-    url: '/signList',
+    url: '/sign/signList',
     method: 'post',
     data
   })
