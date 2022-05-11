@@ -31,6 +31,12 @@
           >
           </el-table-column>
         </el-table>
+        <div class="block">
+          <el-pagination
+            layout="prev, pager, next"
+            :total="total">
+          </el-pagination>
+        </div>
       </el-col>
     </el-row>
     <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
@@ -86,6 +92,7 @@ export default {
     return {
       users: [],
       dialogVisible: false,
+      total:0,
       signFrom: {
         created_by: this.$store.getters.name,
         token: getToken(),
@@ -140,6 +147,7 @@ export default {
         console.log('dispatch-signList')
         console.log(response)
         this.tableData = response.list
+        this.total = response.list.pager.total_rows
         this.loading = false
       }).catch(() => {
         this.loading = false

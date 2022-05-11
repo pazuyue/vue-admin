@@ -54,8 +54,8 @@
 
       <div style="position:relative">
         <div class="tips">
-          <span>{{ $t('login.username') }} : admin</span>
-          <span>{{ $t('login.password') }} : {{ $t('login.any') }}</span>
+          <span>{{ $t('login.username') }} : 白月光</span>
+          <span>{{ $t('login.password') }} : GoLang2020</span>
         </div>
         <div class="tips">
           <span style="margin-right:18px;">
