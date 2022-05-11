@@ -1,5 +1,10 @@
 <template>
   <div class="createPost-container">
+    <el-row :gutter="20">
+      <el-col :span="3">
+        <el-button type="primary" @click="dialogVisible = true">添加信息</el-button>
+      </el-col>
+    </el-row>
     <el-row>
       <el-col :span="24">
         <el-table
@@ -28,36 +33,36 @@
         </el-table>
       </el-col>
     </el-row>
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+      <el-row>
+        <el-col :span="24">
+          <el-form ref="signFrom" :model="signFrom" :rules="signRules" label-width="80px" class="form-container" autocomplete="on" label-position="left">
+            <el-form-item label="值班人员" prop="user_id">
+              <el-select v-model="signFrom.user_id" placeholder="请选择用户">
+                <el-option
+                  ref="user_id"
+                  v-for="item in users"
+                  :key="item.user_id"
+                  :label="item.username"
+                  :value="item.user_id">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="值班时间" prop="sign_time">
+              <el-col :span="11">
+                <el-date-picker type="date" placeholder="选择日期" ref="sign_time" v-model="signFrom.sign_time" value-format="yyyy-MM-dd HH:mm:ss"/>
+              </el-col>
+            </el-form-item>
+          </el-form>
+        </el-col>
+      </el-row>
 
-    <el-row>
-      <el-col :span="24">
-        <el-divider><i class="el-icon-mobile-phone"></i></el-divider>
-        <el-form ref="signFrom" :model="signFrom" :rules="signRules" label-width="80px" class="form-container" autocomplete="on" label-position="left">
-          <el-form-item label="值班人员" prop="user_id">
-            <el-select v-model="signFrom.user_id" placeholder="请选择用户">
-              <el-option
-                ref="user_id"
-                v-for="item in users"
-                :key="item.user_id"
-                :label="item.username"
-                :value="item.user_id"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="值班时间" prop="sign_time">
-            <el-col :span="11">
-              <el-date-picker type="date" placeholder="选择日期" ref="sign_time" v-model="signFrom.sign_time" value-format="yyyy-MM-dd HH:mm:ss"/>
-            </el-col>
-          </el-form-item>
-          <el-form-item>
-            <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="onSubmit">
-              立即创建
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" :loading="loading" @click.native.prevent="onSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -80,6 +85,7 @@ export default {
 
     return {
       users: [],
+      dialogVisible: false,
       signFrom: {
         created_by: this.$store.getters.name,
         token: getToken(),
@@ -116,6 +122,8 @@ export default {
                 type: 'success'
               })
               this.loading = false
+              this.dialogVisible = false
+              this.getSignList()
             })
             .catch(() => {
               this.loading = false
@@ -139,8 +147,6 @@ export default {
     },
     userList() {
       this.$store.dispatch('user/userList').then((response) => {
-        console.log('dispatch-userList')
-        console.log(response)
         this.users = response
       })
     },
@@ -150,6 +156,14 @@ export default {
         return ''
       }
       return moment(date).format('YYYY-MM-DD HH:mm:ss')
+    },
+    handleClose(done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done()
+        })
+        .catch(_ => {
+        })
     }
   }
 }
