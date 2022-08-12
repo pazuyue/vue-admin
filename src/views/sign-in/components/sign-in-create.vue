@@ -5,40 +5,7 @@
         <el-button type="primary" @click="dialogVisible = true">添加信息</el-button>
       </el-col>
     </el-row>
-    <el-row>
-      <el-col :span="24">
-        <el-table
-          v-loading="loading"
-          :data="tableData"
-          style="width: 100%"
-        >
-          <el-table-column
-            prop="sign_time"
-            label="日期"
-            width="180"
-            :formatter="dateFormat"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="username"
-            label="姓名"
-            width="180"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="state"
-            label="状态"
-          >
-          </el-table-column>
-        </el-table>
-        <div class="block">
-          <el-pagination
-            layout="prev, pager, next"
-            :total="total">
-          </el-pagination>
-        </div>
-      </el-col>
-    </el-row>
+    <siginInList></siginInList>
     <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
       <el-row>
         <el-col :span="24">
@@ -74,10 +41,13 @@
 
 <script>
 import { getToken } from '@/utils/auth'
-import moment from 'moment'
+import siginInList from '@/views/sign-in/components/siginInList'
 
 export default {
   name: 'SignInCreate',
+  components: {
+    siginInList
+  },
   data() {
     const validateSignTime = (rule, value, callback) => {
       console.log('validateSignTime')
@@ -92,7 +62,6 @@ export default {
     return {
       users: [],
       dialogVisible: false,
-      total:0,
       signFrom: {
         created_by: this.$store.getters.name,
         token: getToken(),
@@ -103,16 +72,10 @@ export default {
       signRules: {
         user_id: [{ required: true, message: '请选择用户', trigger: 'change' }],
         sign_time: [{ required: true, trigger: 'blur', validator: validateSignTime }]
-      },
-      tableData: [{
-        sign_time: '',
-        username: '',
-        state: ''
-      }]
+      }
     }
   },
   mounted() {
-    this.getSignList()
     this.userList()
   },
   methods: {
@@ -141,29 +104,10 @@ export default {
         }
       })
     },
-    getSignList() {
-      this.loading = true
-      this.$store.dispatch('sign/signList').then((response) => {
-        console.log('dispatch-signList')
-        console.log(response)
-        this.tableData = response.list
-        this.total = response.list.pager.total_rows
-        this.loading = false
-      }).catch(() => {
-        this.loading = false
-      })
-    },
     userList() {
       this.$store.dispatch('user/userList').then((response) => {
         this.users = response
       })
-    },
-    dateFormat: function(row, column) {
-      var date = row[column.property]
-      if (date === undefined) {
-        return ''
-      }
-      return moment(date).format('YYYY-MM-DD HH:mm:ss')
     },
     handleClose(done) {
       this.$confirm('确认关闭？')
